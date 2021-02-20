@@ -19,6 +19,7 @@ app.use(cors({
 
 async function signIn(ctx){
   const {request: {body: {code}}} = ctx;
+  console.log("code: ", code);
   try {
     const result = await fetch("https://oauth2.googleapis.com/token",{
       method: "POST",
@@ -35,6 +36,7 @@ async function signIn(ctx){
     });
     const { access_token } = await result.json();
     ctx.status = 200;
+    console.log("access_token: ", access_token);
     ctx.body = access_token;
   }
   catch (e) {
@@ -44,7 +46,7 @@ async function signIn(ctx){
   
 }
 
-router.get("/api/signIn", signIn)
+router.post("/api/signIn", signIn)
 
 app.use(router.routes()).use(router.allowedMethods());
 

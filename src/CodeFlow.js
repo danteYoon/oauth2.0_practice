@@ -28,13 +28,12 @@ const CodeFlow = ({ googleApi }) => {
     googleApiRef.current.load();
   },[])
   const handleGoogleLogin = async () => {
-    // const queryString = queryParams.join("&");
     try{
       const googleApi = googleApiRef.current;
-      const code = await googleApi.authorize()
+      const code = await googleApi.authorize();
+      console.log("code: ", code);
       const access_token = await googleApi.exchangeCodeToToken(code);
       setToken(access_token);
-      // window.open(`${AUTHORIZE_URI}?${queryString}`);
     } catch(error) {
       console.error(error);
     }

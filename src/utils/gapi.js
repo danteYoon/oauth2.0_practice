@@ -86,7 +86,6 @@ class GoogleApi {
   }
 
   async exchangeCodeToToken(code){
-    
     try{
       const result = await fetch("http://localhost:3001/api/signIn", {
         method: "POST",
@@ -94,17 +93,16 @@ class GoogleApi {
           code, 
         }
       })
-      console.log("result: ", result);
+      return result;
     } catch(error){
       console.error(error);
     }
-    
   }
 
   async authorize(){
     if(this.auth2){
-      try {
-        new Promise((resolve) =>{
+      return new Promise((resolve, reject) =>{
+        try {
           this.auth2.authorize({
             client_id: process.env.REACT_APP_CLIENT_ID,
             client_secret: process.env.REACT_APP_CLIENT_SECRET,
@@ -114,10 +112,11 @@ class GoogleApi {
             console.log("response.code: ", response.code);
             resolve(response.code);
           });
-      }) 
-      } catch(error) {
-        console.error(error);
-      }
+        } catch(error){
+          reject(error);
+          console.error(error);
+        }
+      }).then((value) => value);
     }
   }
 }
