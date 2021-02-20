@@ -14,3 +14,5 @@ server code is in src/server.js
 
 >> ```yarn server```  will start be server
 
+---
+구글 api를 사용하기 전 code flow 와 implicit flow를 사용하는 방법에 대해 알아보는 예제입니다.
