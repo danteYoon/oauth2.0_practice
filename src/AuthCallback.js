@@ -7,11 +7,10 @@ const AuthCallback = ({location}) => {
 
   useEffect(async () => {
     try{
-      const access_token = await gapi.exchangeCodeToToken(queries.get("code"));
-      console.log("access_token: ", access_token);
+      const userInfo = await gapi.exchangeCodeToToken(queries.get("code"));
       window.opener.postMessage({
-        type: "token",
-        access_token: access_token,
+        type: "userInfo",
+        userInfo,
       }, window.location.origin + "/codeflow");
     } catch (error){
       window.opener.postMessage({

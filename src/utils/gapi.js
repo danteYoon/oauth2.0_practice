@@ -87,7 +87,7 @@ class GoogleApi {
 
   async exchangeCodeToToken(code){
     try{
-      const result = await fetch("http://localhost:3001/api/signIn", {
+      const response = await fetch("http://localhost:3001/api/signIn", {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
@@ -95,10 +95,9 @@ class GoogleApi {
         body: JSON.stringify({
           code, 
         }),
+        credentials: "include",
       })
-      console.log("result: ", result);
-      const { access_token } = result;
-      return access_token;
+      return await response.json();
     } catch(error){
       console.error(error);
     }

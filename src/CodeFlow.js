@@ -57,16 +57,10 @@ const CodeFlow = ({ googleApi }) => {
         const win = window.open(
           link, 
           "googleLogin",
-          "left: "
         );
         
       })
       return false;
-      const googleApi = googleApiRef.current;
-      const code = await googleApi.authorize();
-      const access_token = await googleApi.exchangeCodeToToken(code);
-      console.log("access_token: ", access_token);
-      setToken(access_token);
     } catch(error) {
       console.error(error);
     }

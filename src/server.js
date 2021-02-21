@@ -22,6 +22,7 @@ function getCodeAuthorizationLink(ctx){
   const host = "https://accounts.google.com/o/oauth2/v2/auth";
   const scopes = [
     "profile",
+    "email",
     "https://www.googleapis.com/auth/calendar",
   ]
   const queries = {
@@ -58,15 +59,22 @@ async function signIn(ctx){
     });
     const resultJson = await result.json();
     const { access_token, id_token, refresh_token } = resultJson;
-    console.log("access_token: ", access_token);
-    console.log("id_token: ", id_token);
-    const decodeResponse = jwt.decode(id_token);
-    console.log("decodeResponse: ", decodeResponse);
-    // console.log("resultJson: ", resultJson);
-    
-    ctx.cookies.set("practice", )
+    const { sub, email, picture, given_name, family_name } = jwt.decode(id_token);
+    const createdToken = await jwt.sign(
+      {
+        sub,
+        email,
+        picture,
+        given_name,
+        family_name,
+        access_token,
+        refresh_token
+      },
+      process.env.REACT_APP_JWT_SECRET,
+    );
+    ctx.cookies.set("_c_authorization", createdToken, {maxAge: 1000 * 60 * 60 * 24 * 365});
     ctx.status = 200;
-    ctx.body = {access_token};
+    ctx.body = { email, picture, given_name, family_name};
   }
   
   catch (e) {
@@ -82,5 +90,5 @@ app.use(router.routes()).use(router.allowedMethods());
 const port = process.env.PORT || 3001;
 
 app.listen(port, () => {
-  console.log(`server listen on ${port}port`);
+  console.log(`server listen on ${port} port`);
 })
