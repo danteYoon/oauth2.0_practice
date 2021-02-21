@@ -89,11 +89,16 @@ class GoogleApi {
     try{
       const result = await fetch("http://localhost:3001/api/signIn", {
         method: "POST",
-        body: {
+        headers: {
+          'Content-Type': 'application/json',
+      },
+        body: JSON.stringify({
           code, 
-        }
+        }),
       })
-      return result;
+      console.log("result: ", result);
+      const { access_token } = result;
+      return access_token;
     } catch(error){
       console.error(error);
     }
@@ -107,9 +112,9 @@ class GoogleApi {
             client_id: process.env.REACT_APP_CLIENT_ID,
             client_secret: process.env.REACT_APP_CLIENT_SECRET,
             response_type: "code",
+            redirect_uri: "postmessage",
             scope: "profile https://www.googleapis.com/auth/calendar",
           },(response) => {
-            console.log("response.code: ", response.code);
             resolve(response.code);
           });
         } catch(error){

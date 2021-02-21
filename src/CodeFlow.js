@@ -22,17 +22,50 @@ const StyledDiv = styled.div`
 
 const CodeFlow = ({ googleApi }) => {
   const [token ,setToken] = useState(null);
-
   const googleApiRef = useRef(new GApi())
+
+  const messageEventHandler = event => {
+    console.log("event.data: ", event.data);
+  }
+
+  useEffect(() => {
+    window.addEventListener("message", messageEventHandler,false);
+
+    return () => {
+      window.removeEventListener("message", messageEventHandler);
+    }
+  },[]);
+
   useEffect(() => {
     googleApiRef.current.load();
   },[])
+
   const handleGoogleLogin = async () => {
+    
     try{
+      const response = await fetch(
+        "http://localhost:3001/api/codeLink",
+        {
+          headers: {
+            "Content-Type": "text/html;"
+          }
+        }
+      );
+      const link = await response.text();
+      
+      new Promise(resolve => {
+        const win = window.open(
+          link, 
+          "googleLogin",
+          "left: "
+        );
+        
+      })
+      return false;
       const googleApi = googleApiRef.current;
       const code = await googleApi.authorize();
-      console.log("code: ", code);
       const access_token = await googleApi.exchangeCodeToToken(code);
+      console.log("access_token: ", access_token);
       setToken(access_token);
     } catch(error) {
       console.error(error);
